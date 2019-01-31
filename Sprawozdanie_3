@@ -1,0 +1,62 @@
+Sprawozdanie 3 Przemysław Niziński 36757	
+
+1. Korzystamy z Arduino UNO, otwieramy Arduino IDE	
+ros::NodeHandle nh;	
+
+void messegeCb( const std_msgs::Empty& toggle_msg) {	
+  digitalWrite(13,HIGH-digitalRead(13)); / zaświeć diodę led	
+}	
+
+ ros::Subscriber<std_msgs::Empty> sub("toggle_led", &messageCb );	
+
+ void setup()	
+{	
+  pinMode(13,OUTPUT);	
+  nh.initNode();	
+  nh.subscribe(sub);	
+}	
+
+ void loop()	
+{	
+  nh.spinOnce();	
+  delay(1);	
+}	
+
+2.Otwieramy konsolne oraz uruchamiamy system ROS (roscore)	
+roscore / 1 termianal	
+
+3.Otwieramy 2 konsole  w której nawiązujemy połączenie z modułem Arduino	
+rosrun rosserial_arduino serial_node.py _port:=/dev/ttyACM0	
+
+4.Otwieramy 3 konsole i sprawdzamy połączenie zmieniając stan diody	
+rostopic pub toggle_led std_msgs/Empty --once	
+
+5.W środowisku matlaba wykonujemy opis matematyczny położenia oraz wyrysowujemy orientacje bryły	
+
+xlim([-20 20])	
+ylim([-20 20])	
+x = 1;	
+y = 1;	
+
+w1 = 1;	
+w2 = 0.5;	
+R= 0.25;	
+L = 1;	
+θ = 0; //theta	
+
+ while true // pętla nieskończona	
+
+//Połozenie i orientacja	
+dx = (R*(w1+w2)*cos(θ))/2; 	
+dy = (R*(w1+w2)*sin(θ))/2; 	
+θ2 =  (R*(w1-w2))/L;	
+
+x = y+dx;	
+y = y+dy;	
+θ = θ+θ2; 	
+
+drawnow	
+grid on	
+plot(x,y, ‘*’) //wyrysowanie na wykresie orientacji bryły	
+
+ end
